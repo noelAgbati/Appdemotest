@@ -1,12 +1,12 @@
-# Workflow pour déployer le contenu statique depuis develop
+# Workflow pour déployer le contenu statique vers GitHub Pages
 name: Deploy static content to Pages
 
 on:
-  # Déclenche le workflow sur les pushes vers develop
+  # Déclenche le workflow sur les pushes vers main
   push:
-    branches: ["develop"]
+    branches: ["main"]
 
-  # Permet un déclenchement manuel depuis l'onglet Actions
+  # Déclenchement manuel possible
   workflow_dispatch:
 
 permissions:
@@ -20,22 +20,24 @@ concurrency:
 
 jobs:
   deploy:
+    runs-on: ubuntu-latest
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Pages
+      - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Tu peux cibler le dossier build de React si besoin
-          path: 'build'
+          # ⚠️ adapte si besoin : build / dist / out
+          path: build
 
       - name: Deploy to GitHub Pages
         id: deployment
